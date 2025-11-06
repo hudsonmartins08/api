@@ -1,6 +1,19 @@
+const multer = require("multer");
 const { Categories } = require("../models");
 
+const upload = multer({ storage: multer.memoryStorage() });
+
 async function validateInsertProduct(req, res, next){
+
+    await new Promise((resolve, reject) => {
+        upload.array("images", 5)(req, res, (err) => {
+            if(err){
+                reject(err)
+            } else {
+                resolve();
+            }
+        })
+    })
     const {name, category_id, price, shipping, warranty, return_policy} = req.body;
 
     if(!name || !category_id || !price || !shipping || !warranty || !return_policy){
